@@ -8,18 +8,18 @@ const app = express();
 // Vi setter opp en enkel "rute" (route) som svarer på
 // forespørsler til rotkatalogen, /:
 app.get('/her', (req, res) => {
- res.send(`<h1>Hallo, Klokken er ${new Date().toLocaleTimeString()}</h1>
- <button onclick="window.location.href='/'">Tilbake til hjemmesiden</button>
- `);
+  res.send(`<h1>Hallo, Klokken er ${new Date().toLocaleTimeString()}</h1>
+  <button onclick="window.location.href='/'">Tilbake til hjemmesiden</button>
+  `);
 });
 
 app.get('/', (req, res) => {
- res.send(`
+  res.send(`
   <h1>Velkommen til min hjemmeside!</h1> 
   <p>Dette er en enkel Express-server som viser en klokkebeskjed.</p>
   <div class="buttons">
-   <button onclick="window.location.href='/her'">Gå til klokkebeskjed</button>
-   <button onclick="window.location.href='/klasskamerater'">Se klasskamerater</button>
+    <button onclick="window.location.href='/her'">Gå til klokkebeskjed</button>
+    <button onclick="window.location.href='/klasskamerater'">Se klasskamerater</button>
   </div>
   <style>
     .buttons {
@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/klasskamerater', (req, res) => {
- res.send(`
+  res.send(`
   <h1>Klasskamerater</h1>
   <p>Her er en liste over mine klasskamerater:</p>
   <ul>
@@ -48,10 +48,10 @@ app.get('/klasskamerater', (req, res) => {
     <li>Lars</li>
   </ul>
   <button onclick="window.location.href='/'">Tilbake til hjemmesiden</button>
- `);
+  `);
 });
 
 // Så starter vi serveren, som nå lytter på port 3000:
 app.listen(3000, () => {
- console.log('Server listening on port 3000');
+  console.log('Server listening on port 3000');
 });
