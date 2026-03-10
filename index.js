@@ -1,9 +1,42 @@
 // Først bruker vi 'require' for å referere til Express-biblioteket
 //  (som ligger i node_modules):
 const express = require('express');
+const { Pool } = require("pg");
 
-// Deretter lager vi en ny instans av Express:
 const app = express();
+
+// PostgreSQL connection
+const pool = new Pool({
+  user: "postgres",
+  host: "localhost",
+  database: "testdb",
+  password: "mysecretpassword",
+  port: 5432,
+});
+
+// Route to create table and insert users
+app.get("/setup-users", async (req, res) => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100)
+      );
+    `);
+
+    await pool.query(`
+      INSERT INTO users (name) VALUES
+        ('Joe Biden'),
+        ('Donald Trump'),
+        ('Kamala Harris');
+    `);
+
+    res.send("Users table created and data inserted!");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Database error");
+  }
+});
 
 // Vi setter opp en enkel "rute" (route) som svarer på
 // forespørsler til rotkatalogen, /:
@@ -20,6 +53,7 @@ app.get('/', (req, res) => {
   <div class="buttons">
     <button onclick="window.location.href='/her'">Gå til klokkebeskjed</button>
     <button onclick="window.location.href='/klasskamerater'">Se klasskamerater</button>
+    <button onclick="window.location.href='/api'">Se api</button>
   </div>
   <style>
     .buttons {
@@ -49,6 +83,18 @@ app.get('/klasskamerater', (req, res) => {
   </ul>
   <button onclick="window.location.href='/'">Tilbake til hjemmesiden</button>
   `);
+});
+
+app.get('/api', async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM users");
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Database error");
+  }
+  
+  res.send('<button onclick="window.location.href=' /'">Tilbake til hjemmesiden</button>')
 });
 
 // Så starter vi serveren, som nå lytter på port 3000:
