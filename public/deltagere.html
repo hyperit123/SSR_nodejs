@@ -1,0 +1,24 @@
+<div style=" margin: 20px 0;">
+  <h1>Welcome til deltagere Page</h1>
+  <p>Se liste av deltagere neddenfor.</p>
+</div>
+
+<ul id="deltagere">
+ <li>Henter data...</li>
+</ul>
+
+<button style="margin-top: 10px;" onclick="window.location.href='/'">Tilbake til hjemmesiden</button>
+
+<script>
+ fetch('/deltagere-json')
+   .then(response => response.json())
+   .then(data => {
+    let list = document.getElementById('deltagere');
+    list.innerHTML = '';
+    data.forEach(row => {
+     let li = document.createElement('li');
+     li.textContent = row.name;
+     list.appendChild(li);
+    });
+   });
+</script>

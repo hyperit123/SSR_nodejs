@@ -22,7 +22,7 @@ docker run --rm \
   postgres
 ```
 
->  **Tip:** You can also use **Podman** — it works almost exactly the same as Docker!
+>  **Tip:** You can also use **Podman** — it works almost exactly the same as Docker! **Tip2:** If your on linux don't forget sudo
 
 ---
 
