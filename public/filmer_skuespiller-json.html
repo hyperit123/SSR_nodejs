@@ -1,0 +1,33 @@
+<div style=" margin: 20px 0;">
+  <h1>Welcome til skuespiller Page</h1>
+  <p>Se liste av skuespillere neddenfor.</p>
+</div>
+
+<div>
+  <h1>Filmer og Skuespillere (JSON)</h1>
+  <ul id="deltagere">
+    <!-- Dynamically generated list items -->
+    <li>Henter data...</li>
+  </ul>
+</div>
+
+<script>
+  fetch('/filmer_skuespiller-json')
+    .then(response => response.json())
+    .then(data => {
+      let list = document.getElementById('deltagere');
+      list.innerHTML = '';
+      data.forEach(row => {
+        const li = document.createElement('li');
+        li.textContent = row.tittel + ' - ' + row.navn; // Assuming "movie" is a property in the JSON
+        list.appendChild(li);
+      });
+    })
+    .catch(error => {
+      console.error('There was a problem with the fetch operation:', error);
+      let list = document.getElementById('deltagere');
+      list.innerHTML = '<li>Kunne ikke hente data.</li>';
+    });
+</script>
+
+<button style="margin-top: 10px;" onclick="window.location.href='/'">Tilbake til hjemmesiden</button>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>PostgREST - Skuespillere og Filmer</title>
+ <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+ <h1>PostgREST - Skuespillere og Filmer</h1>
+ <a href="index.html" class="button">Gå til Hjem</a>
+
+ <h2>Skuespillere</h2>
+ <ul id="skuespillere">
+  <li>Laster data...</li>
+ </ul>
+
+ <p>
+  <input id="skuespiller-navn" type="text" placeholder="Skriv inn skuespillernavn">
+  <button id="legg-til-skuespiller">Legg til Skuespiller</button>
+ </p>
+
+ <h2>Filmer</h2>
+ <ul id="filmer">
+  <li>Laster data...</li>
+ </ul>
+
+ <p>
+  <input id="film-tittel" type="text" placeholder="Skriv inn filmtittel">
+  <button id="legg-til-film">Legg til Film</button>
+ </p>
+
+ <script>
+  const POSTGREST_URL = 'http://localhost:3002';
+
+  async function hentSkuespillere() {
+   const response = await fetch(POSTGREST_URL + '/skuespillere');
+   const data = await response.json();
+   const list = document.getElementById('skuespillere');
+   list.innerHTML = '';
+
+   data.forEach(skuespiller => {
+    const listItem = document.createElement('li');
+    listItem.textContent = skuespiller.navn;
+    list.appendChild(listItem);
+   });
+  }
+
+  async function hentFilmer() {
+   const response = await fetch(POSTGREST_URL + '/filmer');
+   const data = await response.json();
+   const list = document.getElementById('filmer');
+   list.innerHTML = '';
+
+   data.forEach(film => {
+    const listItem = document.createElement('li');
+    listItem.textContent = film.tittel;
+    list.appendChild(listItem);
+   });
+  }
+
+  hentSkuespillere();
+  hentFilmer();
+
+  document.getElementById('legg-til-skuespiller').addEventListener('click', async () => {
+   const inputElement = document.getElementById('skuespiller-navn');
+   const navn = inputElement.value.trim();
+   if (!navn) return;
+
+   await fetch(POSTGREST_URL + '/skuespillere', {
+    method: 'POST',
+    headers: {
+     'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ navn: navn })
+   });
+
+   inputElement.value = '';
+   await hentSkuespillere();
+  });
+
+  document.getElementById('legg-til-film').addEventListener('click', async () => {
+   const inputElement = document.getElementById('film-tittel');
+   const tittel = inputElement.value.trim();
+   if (!tittel) return;
+
+   await fetch(POSTGREST_URL + '/filmer', {
+    method: 'POST',
+    headers: {
+     'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ tittel: tittel })
+   });
+
+   inputElement.value = '';
+   await hentFilmer();
+  });
+ </script>
+</body>
+
+</html>

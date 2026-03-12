@@ -49,10 +49,3 @@ npm run serve
 | `npm run serve` | Start server without auto-reload |
 
 ---
-
-##  Tech Stack
-
-- **[Express](https://expressjs.com/)** — Web framework
-- **[nodemon](https://nodemon.io/)** — Dev auto-reloader
-- **[pg](https://node-postgres.com/)** — PostgreSQL client
-- **[PostgreSQL](https://www.postgresql.org/)** — Database (via Docker/Podman)

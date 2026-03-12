@@ -4,21 +4,65 @@
 </div>
 
 <ul id="deltagere">
- <li>Henter data...</li>
+  <li>Henter data...</li>
 </ul>
+
+<p>
+  <input id="name" placeholder="Navn på deltager" type="text">
+  <button id="add">Legg inn ny deltager</button>
+</p>
 
 <button style="margin-top: 10px;" onclick="window.location.href='/'">Tilbake til hjemmesiden</button>
 
 <script>
- fetch('/deltagere-json')
-   .then(response => response.json())
-   .then(data => {
-    let list = document.getElementById('deltagere');
-    list.innerHTML = '';
-    data.forEach(row => {
-     let li = document.createElement('li');
-     li.textContent = row.name;
-     list.appendChild(li);
+  async function fetchDeltagere() {
+    try {
+      const response = await fetch('/deltagere-json');
+      const data = await response.json();
+      let list = document.getElementById('deltagere');
+      list.innerHTML = '';
+      data.forEach(row => {
+        let li = document.createElement('li');
+        li.textContent = row.name;
+        list.appendChild(li);
+      });
+    } catch (error) {
+      console.error('Error fetching deltagere:', error);
+      let list = document.getElementById('deltagere');
+      list.innerHTML = '<li>Kunne ikke hente data.</li>';
+    }
+  }
+
+  fetchDeltagere();
+</script>
+<script type="module">
+  function getUserName() {
+    const inputElement = document.getElementById('name');
+    return inputElement.value;
+  }
+
+  document.getElementById('add')
+    .addEventListener('click', async (event) => {
+      const userName = getUserName();
+      await sendData(userName);
     });
-   });
+
+  async function sendData(userName) {
+    const data = { name: userName };
+    const response = await fetch('/deltagere', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    if (response.ok) {
+      console.log('Data sent successfully');
+      fetchDeltagere(); // Oppdater listen etter å ha lagt til en ny deltager
+    } else {
+      console.error('Error sending data');
+    }
+    const inputElement = document.getElementById('name');
+    inputElement.value = ''; // Clear the input field after sending data
+  }
 </script>
